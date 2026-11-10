@@ -4,7 +4,6 @@ from PySide6.QtWidgets import QApplication, QDialog
 from views.login_dialog import LoginDialog
 from views.main_window import MainWindow
 
-
 def principal():
     aplicacion = QApplication(sys.argv)
 
@@ -20,7 +19,6 @@ def principal():
     else:
         # Cierre limpio del proceso si se cancela la autenticación
         sys.exit(0)
-
 
 if __name__ == '__main__':
     principal()

@@ -28,6 +28,7 @@
      <string>&amp;Mantenimiento</string>
     </property>
     <addaction name="action_programas"/>
+    <addaction name="action_empleados"/>
    </widget>
    <addaction name="menuMantenimiento"/>
   </widget>
@@ -35,6 +36,11 @@
   <action name="action_programas">
    <property name="text">
     <string>Programas de Estudio</string>
+   </property>
+  </action>
+  <action name="action_empleados">
+   <property name="text">
+    <string>Colaboradores</string>
    </property>
   </action>
  </widget>
