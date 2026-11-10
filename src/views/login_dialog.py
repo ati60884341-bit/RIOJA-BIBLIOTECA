@@ -1,19 +1,18 @@
-import os
-from PyQt6.QtWidgets import QDialog, QMessageBox, QLineEdit
-from PyQt6 import uic
+from PySide6.QtWidgets import QDialog, QMessageBox, QLineEdit
 
-from src.controllers.auth_controller import AuthController
-from src.exceptions.biblioteca_exceptions import ValidacionDatosError, BibliotecaException
+from views.ui.frm_login_ui import Ui_Form
+from controllers.auth_controller import AuthController
+from exceptions.biblioteca_exceptions import ValidacionDatosError, BibliotecaException
 
-class LoginDialog(QDialog):
+
+class LoginDialog(QDialog, Ui_Form):
     """Vista modal encargada de capturar credenciales y mostrar respuestas al operador."""
 
     def __init__(self, parent=None):
         super().__init__(parent)
 
         # 1. Cargar el diseño de interfaz gráfica
-        ruta_interfaz = os.path.join(os.path.dirname(__file__), "ui", "frm_login.ui")
-        uic.loadUi(ruta_interfaz, self)
+        self.setupUi(self)
 
         # 2. Instanciar el controlador de seguridad
         self._controlador_autenticacion = AuthController()

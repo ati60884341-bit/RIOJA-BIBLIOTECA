@@ -1,7 +1,7 @@
 from typing import Optional
-from src.database.conexion_bd import ConexionBD
-from src.models.entities.usuario import Usuario
-from src.exceptions.biblioteca_exceptions import BibliotecaException
+from database.conexion_bd import ConexionBD
+from models.entities.usuario import Usuario
+from exceptions.biblioteca_exceptions import BibliotecaException
 
 class UsuarioModel:
     """Capa DAO: Responsable exclusivo del acceso a datos para la entidad Usuario."""

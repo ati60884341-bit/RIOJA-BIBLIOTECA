@@ -1,7 +1,7 @@
 import bcrypt
-from src.models.usuario_model import UsuarioModel
-from src.models.entities.usuario import Usuario
-from src.exceptions.biblioteca_exceptions import ValidacionDatosError, BibliotecaException
+from models.usuario_model import UsuarioModel
+from models.entities.usuario import Usuario
+from exceptions.biblioteca_exceptions import ValidacionDatosError, BibliotecaException
 
 class AuthController:
     """Controlador que orquesta las reglas de negocio de autenticación y verificación BCrypt."""

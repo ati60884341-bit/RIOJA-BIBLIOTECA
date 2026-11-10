@@ -1,18 +1,17 @@
-import os
-from PyQt6.QtWidgets import QMainWindow
-from PyQt6 import uic
+from PySide6.QtWidgets import QMainWindow
 
+from views.ui.frm_main_ui import Ui_MainWindow
 from views.programa_list_view import ProgramaListView
 
-class MainWindow(QMainWindow):
+
+class MainWindow(QMainWindow, Ui_MainWindow):
     """Controlador visual de la Ventana Principal del sistema corporativo."""
 
     def __init__(self):
         super().__init__()
 
-        # 1. Cargar diseño XML con barra de menú
-        ruta_interfaz = os.path.join(os.path.dirname(__file__), "ui", "frm_main.ui")
-        uic.loadUi(ruta_interfaz, self)
+        # 1. Cargar diseño con barra de menú
+        self.setupUi(self)
 
         # 2. Variable para mantener viva la referencia de la subventana en memoria RAM
         self._ventana_programas = None
