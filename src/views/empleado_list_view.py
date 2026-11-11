@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import QWidget, QTableWidgetItem, QMessageBox, QHeaderView, QDialog
 from PySide6.QtCore import Qt
 
-from views.ui.frm_empleado_list_ui import Ui_Form
+from views.frm_empleado_list_ui import Ui_Form
 from views.empleado_form_dialog import EmpleadoFormDialog
 from controllers.empleado_controller import EmpleadoController
 from exceptions.biblioteca_exceptions import BibliotecaException
@@ -39,7 +39,7 @@ class EmpleadoListView(QWidget, Ui_Form):
         cabecera.setSectionResizeMode(0, QHeaderView.ResizeMode.ResizeToContents)
         cabecera.setSectionResizeMode(1, QHeaderView.ResizeMode.ResizeToContents)
         cabecera.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-        cabecera.setSectionResizeMode(3, QHeaderView.ResizeMode.ResizeToContents)
+        cabecera.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
         cabecera.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)
         cabecera.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)
 
@@ -68,7 +68,8 @@ class EmpleadoListView(QWidget, Ui_Form):
         for fila_idx, empleado in enumerate(coleccion_empleados):
             self.tbl_empleados.insertRow(fila_idx)
 
-            nombre_completo = f"{empleado.get('nombres', '')} {empleado.get('apellidos', '')}".strip()
+            # La columna dice "Apellidos y Nombres": se muestra en ese orden
+            nombre_completo = f"{empleado.get('apellidos', '')}, {empleado.get('nombres', '')}".strip(', ')
 
             item_codigo = QTableWidgetItem(empleado.get('codigo_empleado', ''))
             item_codigo.setData(99, empleado.get('id_usuario'))
@@ -79,25 +80,25 @@ class EmpleadoListView(QWidget, Ui_Form):
 
             item_nombre = QTableWidgetItem(nombre_completo)
 
-            item_usuario = QTableWidgetItem(empleado.get('username', ''))
-
             item_cargo = QTableWidgetItem(empleado.get('cargo', ''))
 
             item_turno = QTableWidgetItem(empleado.get('turno', ''))
             item_turno.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
-            for item in (item_codigo, item_dni, item_nombre, item_usuario, item_cargo, item_turno):
+            item_rol = QTableWidgetItem(empleado.get('nombre_rol', ''))
+            item_rol.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+            for item in (item_codigo, item_dni, item_nombre, item_cargo, item_turno, item_rol):
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
 
             self.tbl_empleados.setItem(fila_idx, 0, item_codigo)
             self.tbl_empleados.setItem(fila_idx, 1, item_dni)
             self.tbl_empleados.setItem(fila_idx, 2, item_nombre)
-            self.tbl_empleados.setItem(fila_idx, 3, item_usuario)
-            self.tbl_empleados.setItem(fila_idx, 4, item_cargo)
-            self.tbl_empleados.setItem(fila_idx, 5, item_turno)
+            self.tbl_empleados.setItem(fila_idx, 3, item_cargo)
+            self.tbl_empleados.setItem(fila_idx, 4, item_turno)
+            self.tbl_empleados.setItem(fila_idx, 5, item_rol)
 
-        if hasattr(self, 'label_2'):
-            self.label_2.setText(f"Se muestran los últimos ({len(coleccion_empleados)}) registros")
+        self.label_conteo.setText(f"Se muestran los últimos ({len(coleccion_empleados)}) registros (Top 20)")
 
     def _al_cambiar_seleccion_tabla(self):
         hay_seleccion = len(self.tbl_empleados.selectedItems()) > 0

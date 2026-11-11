@@ -2,7 +2,7 @@ from PySide6.QtWidgets import QDialog, QMessageBox
 from PySide6.QtGui import QRegularExpressionValidator
 from PySide6.QtCore import QRegularExpression
 
-from views.ui.frm_empleado_form_ui import Ui_EmpleadoFormDialog
+from views.frm_empleado_form_ui import Ui_EmpleadoFormDialog
 from controllers.empleado_controller import EmpleadoController
 from controllers.rol_controller import RolController
 from exceptions.biblioteca_exceptions import ValidacionDatosError, BibliotecaException

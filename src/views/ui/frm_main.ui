@@ -29,6 +29,7 @@
     </property>
     <addaction name="action_programas"/>
     <addaction name="action_empleados"/>
+    <addaction name="action_roles"/>
    </widget>
    <addaction name="menuMantenimiento"/>
   </widget>
@@ -41,6 +42,11 @@
   <action name="action_empleados">
    <property name="text">
     <string>Colaboradores</string>
+   </property>
+  </action>
+  <action name="action_roles">
+   <property name="text">
+    <string>Roles</string>
    </property>
   </action>
  </widget>

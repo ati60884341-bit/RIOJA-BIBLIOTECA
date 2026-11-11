@@ -3,7 +3,7 @@ from PySide6.QtWidgets import QWidget, QTableWidgetItem, QMessageBox, QHeaderVie
 from PySide6.QtCore import Qt
 
 # 1. Importamos la clase visual generada por pyside6-uic
-from views.ui.frm_programa_list_ui import Ui_Form
+from views.frm_programa_list_ui import Ui_Form
 
 from controllers.programa_controller import ProgramaController
 from exceptions.biblioteca_exceptions import BibliotecaException

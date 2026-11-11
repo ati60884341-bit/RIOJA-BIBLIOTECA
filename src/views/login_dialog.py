@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QDialog, QMessageBox, QLineEdit
 
-from views.ui.frm_login_ui import Ui_Form
+from views.frm_login_ui import Ui_Form
 from controllers.auth_controller import AuthController
 from exceptions.biblioteca_exceptions import ValidacionDatosError, BibliotecaException
 

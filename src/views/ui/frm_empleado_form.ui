@@ -6,154 +6,221 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>420</width>
-    <height>420</height>
+    <width>520</width>
+    <height>560</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Gestión de Personal</string>
+   <string>Gestión de Personal - Registro Oficial</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>12</number>
+   </property>
+   <property name="leftMargin">
+    <number>18</number>
+   </property>
+   <property name="topMargin">
+    <number>18</number>
+   </property>
+   <property name="rightMargin">
+    <number>18</number>
+   </property>
+   <property name="bottomMargin">
+    <number>18</number>
+   </property>
    <item>
-    <layout class="QFormLayout" name="formLayout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="lbl_numero_documento">
-       <property name="text">
-        <string>DNI:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="txt_numero_documento"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="lbl_nombres">
-       <property name="text">
-        <string>Nombres:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="txt_nombres"/>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="lbl_apellidos">
-       <property name="text">
-        <string>Apellidos:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="txt_apellidos"/>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="lbl_username">
-       <property name="text">
-        <string>Usuario:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="txt_username"/>
-     </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="lbl_password">
-       <property name="text">
-        <string>Contraseña:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="txt_password">
-       <property name="echoMode">
-        <enum>QLineEdit::Password</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="lbl_codigo_empleado">
-       <property name="text">
-        <string>Código:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLineEdit" name="txt_codigo_empleado"/>
-     </item>
-     <item row="6" column="0">
-      <widget class="QLabel" name="lbl_cargo">
-       <property name="text">
-        <string>Cargo:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="txt_cargo"/>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="lbl_turno">
-       <property name="text">
-        <string>Turno:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QComboBox" name="cbo_turno">
-       <item>
+    <widget class="QGroupBox" name="grp_usuario">
+     <property name="title">
+      <string>Datos de Identidad y Acceso (Usuario)</string>
+     </property>
+     <layout class="QFormLayout" name="form_usuario">
+      <property name="verticalSpacing">
+       <number>8</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_dni">
         <property name="text">
-         <string>Mañana</string>
+         <string>N° Documento (DNI):</string>
         </property>
-       </item>
-       <item>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="txt_numero_documento">
+        <property name="placeholderText">
+         <string>8 dígitos numéricos</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_nombres">
         <property name="text">
-         <string>Tarde</string>
+         <string>Nombres:</string>
         </property>
-       </item>
-       <item>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="txt_nombres">
+        <property name="placeholderText">
+         <string>Nombres del colaborador</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_apellidos">
         <property name="text">
-         <string>Noche</string>
+         <string>Apellidos:</string>
         </property>
-       </item>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="lbl_rol">
-       <property name="text">
-        <string>Rol:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QComboBox" name="cbo_rol"/>
-     </item>
-    </layout>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="txt_apellidos">
+        <property name="placeholderText">
+         <string>Apellidos paterno y materno</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="lbl_user">
+        <property name="text">
+         <string>Usuario / Correo:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="txt_username">
+        <property name="placeholderText">
+         <string>usuario@sistema.com</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="lbl_pwd">
+        <property name="text">
+         <string>Contraseña:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="txt_password">
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="placeholderText">
+         <string>Mínimo 6 caracteres</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="lbl_rol">
+        <property name="text">
+         <string>Rol en Sistema:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="1">
+       <widget class="QComboBox" name="cbo_rol"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="grp_empleado">
+     <property name="title">
+      <string>Datos Laborales e Institucionales (Empleado)</string>
+     </property>
+     <layout class="QFormLayout" name="form_empleado">
+      <property name="verticalSpacing">
+       <number>8</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QLabel" name="lbl_cod_emp">
+        <property name="text">
+         <string>Código Empleado:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="txt_codigo_empleado">
+        <property name="placeholderText">
+         <string>Ej. EMP-001</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="lbl_cargo">
+        <property name="text">
+         <string>Cargo Institucional:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="txt_cargo">
+        <property name="placeholderText">
+         <string>Ej. Auxiliar de Biblioteca, Catalogador</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="lbl_turno">
+        <property name="text">
+         <string>Turno Laboral:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QComboBox" name="cbo_turno">
+        <item>
+         <property name="text">
+          <string>Mañana</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Tarde</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Noche</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Completo</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>10</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <layout class="QHBoxLayout" name="layout_botones">
      <item>
-      <spacer name="espaciador">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+      <widget class="QPushButton" name="btn_guardar">
+       <property name="text">
+        <string>Guardar Empleado</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="btn_cancelar">
        <property name="text">
         <string>Cancelar</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_guardar">
-       <property name="text">
-        <string>Registrar Empleado</string>
        </property>
       </widget>
      </item>

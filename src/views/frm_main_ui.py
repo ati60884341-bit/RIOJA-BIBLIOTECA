@@ -28,6 +28,8 @@ class Ui_MainWindow(object):
         self.action_programas.setObjectName(u"action_programas")
         self.action_empleados = QAction(MainWindow)
         self.action_empleados.setObjectName(u"action_empleados")
+        self.action_roles = QAction(MainWindow)
+        self.action_roles.setObjectName(u"action_roles")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         MainWindow.setCentralWidget(self.centralwidget)
@@ -44,6 +46,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuMantenimiento.menuAction())
         self.menuMantenimiento.addAction(self.action_programas)
         self.menuMantenimiento.addAction(self.action_empleados)
+        self.menuMantenimiento.addAction(self.action_roles)
 
         self.retranslateUi(MainWindow)
 
@@ -54,6 +57,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Sistema de Gesti\u00f3n de Biblioteca", None))
         self.action_programas.setText(QCoreApplication.translate("MainWindow", u"Programas de Estudio", None))
         self.action_empleados.setText(QCoreApplication.translate("MainWindow", u"Colaboradores", None))
+        self.action_roles.setText(QCoreApplication.translate("MainWindow", u"Roles", None))
         self.menuMantenimiento.setTitle(QCoreApplication.translate("MainWindow", u"&Mantenimiento", None))
     # retranslateUi
 
