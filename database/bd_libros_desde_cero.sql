@@ -4,6 +4,10 @@
 --  Ejecutar COMPLETO en MySQL 8 (Workbench: rayo ⚡ / Ctrl+Shift+Enter).
 --  ATENCIÓN: borra la base bd_libros si ya existe y la vuelve a crear.
 --
+--  ¿Ya tienes datos y solo quieres actualizar los procedimientos almacenados?
+--  Ejecuta en su lugar database/solo_procedimientos.sql (mismos 13
+--  procedimientos de la sección 3, sin tocar tablas ni datos).
+--
 --  Usuarios de prueba (contraseña de todos: 123456)
 --    admin@sistema.com            -> Administrador
 --    ana.torres@sistema.com       -> Bibliotecario
