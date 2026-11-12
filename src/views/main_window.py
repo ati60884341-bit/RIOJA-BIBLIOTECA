@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QMainWindow
-from views.ui.frm_main_ui import Ui_MainWindow
+from views.frm_main_ui import Ui_MainWindow
 from views.programa_list_view import ProgramaListView
 from views.empleado_list_view import EmpleadoListView
 from views.rol_list_view import RolListView
@@ -15,6 +15,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._ventana_programas = None
         self._ventana_empleados = None
         self._ventana_roles = None
+
+        # Menú Archivo: cierra la aplicación
+        self.action_salir.triggered.connect(self.close)
 
         # Conexión de acciones del menú Mantenimiento (QAction.triggered)
         self.action_programas.triggered.connect(self._abrir_modulo_programas)

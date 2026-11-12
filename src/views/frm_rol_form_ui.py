@@ -1,24 +1,5 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'frm_rol_form.ui'
-##
-## Created by: Qt User Interface Compiler version 6.12.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QDialog, QFormLayout, QGroupBox,
-    QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit,
-    QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout,
-    QWidget)
+from PySide6.QtCore import QCoreApplication, QMetaObject
+from PySide6.QtWidgets import QFormLayout, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QPlainTextEdit, QPushButton, QSizePolicy, QSpacerItem, QVBoxLayout
 
 class Ui_RolFormDialog(object):
     def setupUi(self, RolFormDialog):
@@ -80,7 +61,6 @@ class Ui_RolFormDialog(object):
         self.retranslateUi(RolFormDialog)
 
         QMetaObject.connectSlotsByName(RolFormDialog)
-    # setupUi
 
     def retranslateUi(self, RolFormDialog):
         RolFormDialog.setWindowTitle(QCoreApplication.translate("RolFormDialog", u"Gesti\u00f3n de Roles - Registro Oficial", None))
@@ -91,5 +71,4 @@ class Ui_RolFormDialog(object):
         self.txt_descripcion.setPlaceholderText(QCoreApplication.translate("RolFormDialog", u"Funciones y permisos del rol (m\u00e1x. 150 caracteres)", None))
         self.btn_guardar.setText(QCoreApplication.translate("RolFormDialog", u"Guardar Rol", None))
         self.btn_cancelar.setText(QCoreApplication.translate("RolFormDialog", u"Cancelar", None))
-    # retranslateUi
 

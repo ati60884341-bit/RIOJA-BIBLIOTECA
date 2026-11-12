@@ -1,13 +1,6 @@
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHBoxLayout, QHeaderView,
-    QLabel, QLineEdit, QPushButton, QSizePolicy,
-    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtCore import QCoreApplication, QMetaObject
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QAbstractItemView, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -93,7 +86,6 @@ class Ui_Form(object):
         self.retranslateUi(Form)
 
         QMetaObject.connectSlotsByName(Form)
-    # setupUi
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Cat\u00e1logo de Empleados", None))
@@ -118,5 +110,4 @@ class Ui_Form(object):
         ___qtablewidgetitem6 = self.tbl_empleados.horizontalHeaderItem(6)
         ___qtablewidgetitem6.setText(QCoreApplication.translate("Form", u"Estado", None))
         self.label_conteo.setText(QCoreApplication.translate("Form", u"Se muestra los \u00faltimos (Top 20)", None))
-    # retranslateUi
 

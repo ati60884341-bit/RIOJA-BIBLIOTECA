@@ -101,16 +101,20 @@ class EmpleadoListView(QWidget, Ui_Form):
     # Acción 4: Editar (Principio DRY)
     # ---------------------------------------------------------------
     def _al_hacer_clic_editar(self):
-        fila = self.tbl_empleados.currentRow()
-        if fila < 0:
+        """Recupera el ID de la fila seleccionada y abre el modal en modo Edición."""
+        fila_actual = self.tbl_empleados.currentRow()
+        if fila_actual < 0:
+            QMessageBox.warning(self, "Selección Requerida", "Seleccione un empleado de la lista para editar.")
             return
 
-        # Extraer el ID oculto de la grilla
-        id_oculto = self.tbl_empleados.item(fila, 0).data(99)
+        # Rescate del identificador primario almacenado en la memoria de la celda
+        celda_codigo = self.tbl_empleados.item(fila_actual, 0)
+        id_usuario = celda_codigo.data(99)
 
-        modal = EmpleadoFormDialog(parent=self, id_usuario_editar=id_oculto)
-        if modal.exec() == QDialog.DialogCode.Accepted:
-            self._cargar_grilla()
+        # Apertura modal inyectando el identificador
+        modal_edicion = EmpleadoFormDialog(parent=self, id_usuario_editar=id_usuario)
+        if modal_edicion.exec() == QDialog.DialogCode.Accepted:
+            self._cargar_grilla()  # Recarga reactiva de los datos actualizados
 
     # ---------------------------------------------------------------
     # Acción 5: Eliminar (UX defensiva)

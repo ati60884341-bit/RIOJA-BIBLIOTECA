@@ -1,23 +1,6 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'frm_rol_list.ui'
-##
-## Created by: Qt User Interface Compiler version 6.12.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
-from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
-    QMetaObject, QObject, QPoint, QRect,
-    QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHBoxLayout, QHeaderView,
-    QLabel, QLineEdit, QPushButton, QSizePolicy,
-    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtCore import QCoreApplication, QMetaObject
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QAbstractItemView, QHBoxLayout, QLabel, QLineEdit, QPushButton, QTableWidget, QTableWidgetItem, QVBoxLayout
 
 class Ui_FormRolList(object):
     def setupUi(self, FormRolList):
@@ -97,7 +80,6 @@ class Ui_FormRolList(object):
         self.retranslateUi(FormRolList)
 
         QMetaObject.connectSlotsByName(FormRolList)
-    # setupUi
 
     def retranslateUi(self, FormRolList):
         FormRolList.setWindowTitle(QCoreApplication.translate("FormRolList", u"Cat\u00e1logo de Roles", None))
@@ -116,5 +98,4 @@ class Ui_FormRolList(object):
         ___qtablewidgetitem3 = self.tbl_roles.horizontalHeaderItem(3)
         ___qtablewidgetitem3.setText(QCoreApplication.translate("FormRolList", u"Usuarios Asignados", None))
         self.label_conteo.setText(QCoreApplication.translate("FormRolList", u"Se muestran (0) roles registrados", None))
-    # retranslateUi
 

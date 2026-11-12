@@ -470,19 +470,25 @@ BEGIN
     COMMIT;
 END$$
 
+-- ==============================================================================
+-- 2. ACTUALIZACIÓN TRANSACCIONAL ATÓMICA DE EMPLEADOS (S22)
+-- Modifica concurrentemente las tablas usuarios y empleados bajo control ACID
+-- ==============================================================================
+DROP PROCEDURE IF EXISTS sp_empleado_actualizar $$
 CREATE PROCEDURE sp_empleado_actualizar(
     IN p_id_usuario       INT,
     IN p_numero_documento VARCHAR(15),
     IN p_nombres          VARCHAR(80),
     IN p_apellidos        VARCHAR(80),
     IN p_username         VARCHAR(100),
-    IN p_password_hash    VARCHAR(255),   -- '' o NULL = conservar la contraseña actual
+    IN p_password_hash    VARCHAR(255), -- Cadena vacía si se conserva la clave
     IN p_rol_id           INT,
     IN p_codigo_empleado  VARCHAR(20),
     IN p_cargo            VARCHAR(80),
     IN p_turno            VARCHAR(30)
 )
-BEGIN
+sp_bloque: BEGIN
+    -- Manejador de fallas: revierte cambios y propaga la excepción hacia Python
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -491,51 +497,68 @@ BEGIN
 
     START TRANSACTION;
 
-    IF NOT EXISTS (SELECT 1 FROM empleados WHERE usuario_id = p_id_usuario) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'El empleado que intenta actualizar no existe.';
-    END IF;
-
-    IF EXISTS (SELECT 1 FROM usuarios
-               WHERE numero_documento = p_numero_documento
-                 AND id_usuario <> p_id_usuario) THEN
-        SIGNAL SQLSTATE '45000'
+    -- Validación defensiva: Evitar colisión de DNI con registros de otros usuarios
+    IF EXISTS (
+        SELECT 1 FROM usuarios 
+        WHERE numero_documento = p_numero_documento 
+          AND id_usuario != p_id_usuario
+    ) THEN
+        SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = 'El documento ingresado pertenece a otro usuario registrado.';
     END IF;
 
-    IF EXISTS (SELECT 1 FROM usuarios
-               WHERE username = p_username
-                 AND id_usuario <> p_id_usuario) THEN
-        SIGNAL SQLSTATE '45000'
+    -- Validación defensiva: Evitar colisión de Username/Correo con otras cuentas
+    IF EXISTS (
+        SELECT 1 FROM usuarios 
+        WHERE username = p_username 
+          AND id_usuario != p_id_usuario
+    ) THEN
+        SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = 'El correo o nombre de usuario ya está asignado a otra cuenta.';
     END IF;
 
-    IF EXISTS (SELECT 1 FROM empleados
-               WHERE codigo_empleado = p_codigo_empleado
-                 AND usuario_id <> p_id_usuario) THEN
-        SIGNAL SQLSTATE '45000'
+    -- Validación defensiva: Evitar duplicidad de Código de Empleado
+    IF EXISTS (
+        SELECT 1 FROM empleados 
+        WHERE codigo_empleado = p_codigo_empleado 
+          AND usuario_id != p_id_usuario
+    ) THEN
+        SIGNAL SQLSTATE '45000' 
             SET MESSAGE_TEXT = 'El código corporativo de empleado ya pertenece a otro trabajador.';
     END IF;
 
-    -- Tabla padre: usuarios (la contraseña solo cambia si llega un hash nuevo)
-    UPDATE usuarios SET
-        numero_documento = p_numero_documento,
-        nombres          = p_nombres,
-        apellidos        = p_apellidos,
-        username         = p_username,
-        password_hash    = IF(IFNULL(p_password_hash, '') = '', password_hash, p_password_hash),
-        rol_id           = p_rol_id
-    WHERE id_usuario = p_id_usuario;
+    -- Paso A: Actualización condicional en la entidad Padre (usuarios)
+    IF p_password_hash = '' THEN
+        -- Se conservan las credenciales criptográficas previas
+        UPDATE usuarios SET 
+            numero_documento = p_numero_documento,
+            nombres          = p_nombres,
+            apellidos        = p_apellidos,
+            username         = p_username,
+            rol_id           = p_rol_id
+        WHERE id_usuario = p_id_usuario;
+    ELSE
+        -- Se actualiza el hash criptográfico suministrado por el controlador
+        UPDATE usuarios SET 
+            numero_documento = p_numero_documento,
+            nombres          = p_nombres,
+            apellidos        = p_apellidos,
+            username         = p_username,
+            password_hash    = p_password_hash,
+            rol_id           = p_rol_id
+        WHERE id_usuario = p_id_usuario;
+    END IF;
 
-    -- Tabla hija: empleados
-    UPDATE empleados SET
+    -- Paso B: Actualización en la entidad Hija (empleados)
+    UPDATE empleados SET 
         codigo_empleado = p_codigo_empleado,
         cargo           = p_cargo,
         turno           = p_turno
     WHERE usuario_id = p_id_usuario;
 
+    -- Paso C: Consolidación física de la transacción
     COMMIT;
-END$$
+END sp_bloque $$
 
 -- ---------- Empleados: Eliminación (S23 - Acción 5) ----------
 -- 1. BORRADO LÓGICO (Estándar Corporativo: desactiva el acceso conservando historial)
