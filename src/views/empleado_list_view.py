@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt
 from views.frm_empleado_list_ui import Ui_Form
 from views.empleado_form_dialog import EmpleadoFormDialog
 from controllers.empleado_controller import EmpleadoController
-from exceptions.biblioteca_exceptions import BibliotecaException
+from exceptions.biblioteca_exceptions import BibliotecaException, ValidacionDatosError
 
 
 class EmpleadoListView(QWidget, Ui_Form):
@@ -15,23 +15,20 @@ class EmpleadoListView(QWidget, Ui_Form):
         self.setupUi(self)
 
         self._controlador = EmpleadoController()
-
         self._configurar_cabeceras_tabla()
         self.txt_buscar.setClearButtonEnabled(True)
 
-        self.btn_buscar.clicked.connect(self._ejecutar_busqueda)
-        self.txt_buscar.returnPressed.connect(self._ejecutar_busqueda)
+        # Conexiones para el buscador reactivo
+        self.btn_buscar.clicked.connect(self._cargar_grilla)
+        self.txt_buscar.returnPressed.connect(self._cargar_grilla)
         self.txt_buscar.textChanged.connect(self._al_cambiar_texto_busqueda)
 
-        self.tbl_empleados.itemSelectionChanged.connect(self._al_cambiar_seleccion_tabla)
-
+        # Botones de mantenimiento (Acciones 2, 4 y 5)
         self.btn_nuevo.clicked.connect(self._al_hacer_clic_nuevo)
         self.btn_editar.clicked.connect(self._al_hacer_clic_editar)
         self.btn_eliminar.clicked.connect(self._al_hacer_clic_eliminar)
 
-        self.btn_editar.setEnabled(False)
-        self.btn_eliminar.setEnabled(False)
-
+        # Cargar los datos nada más al abrir la ventana
         self._cargar_grilla()
 
     def _configurar_cabeceras_tabla(self):
@@ -42,94 +39,106 @@ class EmpleadoListView(QWidget, Ui_Form):
         cabecera.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
         cabecera.setSectionResizeMode(4, QHeaderView.ResizeMode.ResizeToContents)
         cabecera.setSectionResizeMode(5, QHeaderView.ResizeMode.ResizeToContents)
+        cabecera.setSectionResizeMode(6, QHeaderView.ResizeMode.ResizeToContents)
 
+    # ---------------------------------------------------------------
+    # Acción 1: Mostrar la grilla y buscar
+    # ---------------------------------------------------------------
     def _cargar_grilla(self):
         try:
-            lista_empleados = self._controlador.listar_empleados()
-            self._renderizar_datos(lista_empleados)
-        except BibliotecaException as error:
-            QMessageBox.critical(self, "Error de Conexión", str(error))
+            criterio = self.txt_buscar.text()
+            lista = self._controlador.listar_empleados(criterio)
+            self._renderizar_tabla(lista)
+        except BibliotecaException as ex:
+            QMessageBox.critical(self, "Error", str(ex))
 
-    def _ejecutar_busqueda(self):
-        criterio = self.txt_buscar.text()
-        try:
-            lista_filtrada = self._controlador.listar_empleados(criterio)
-            self._renderizar_datos(lista_filtrada)
-        except BibliotecaException as error:
-            QMessageBox.critical(self, "Error de Búsqueda", str(error))
-
-    def _al_cambiar_texto_busqueda(self, nuevo_texto: str):
-        if not nuevo_texto.strip():
+    def _al_cambiar_texto_busqueda(self, texto: str):
+        # Si el usuario borra todo el texto, vuelve a cargar la tabla completa
+        if not texto.strip():
             self._cargar_grilla()
 
-    def _renderizar_datos(self, coleccion_empleados):
+    def _renderizar_tabla(self, lista):
         self.tbl_empleados.setRowCount(0)
-
-        for fila_idx, empleado in enumerate(coleccion_empleados):
+        for fila_idx, emp in enumerate(lista):
             self.tbl_empleados.insertRow(fila_idx)
 
-            # La columna dice "Apellidos y Nombres": se muestra en ese orden
-            nombre_completo = f"{empleado.get('apellidos', '')}, {empleado.get('nombres', '')}".strip(', ')
+            # ¡Magia Arquitectónica!: Ocultamos el ID real en la memoria de la celda
+            item_cod = QTableWidgetItem(emp['codigo_empleado'])
+            item_cod.setData(99, emp['id_usuario'])
+            item_cod.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
-            item_codigo = QTableWidgetItem(empleado.get('codigo_empleado', ''))
-            item_codigo.setData(99, empleado.get('id_usuario'))
-            item_codigo.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            item_dni = QTableWidgetItem(emp['numero_documento'])
+            item_nom = QTableWidgetItem(emp['nombre_completo'])
+            item_cargo = QTableWidgetItem(emp['cargo'])
+            item_turno = QTableWidgetItem(emp['turno'])
+            item_rol = QTableWidgetItem(emp['rol'])
+            item_estado = QTableWidgetItem(emp['estado'])
+            item_estado.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
-            item_dni = QTableWidgetItem(empleado.get('numero_documento', ''))
-            item_dni.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-            item_nombre = QTableWidgetItem(nombre_completo)
-
-            item_cargo = QTableWidgetItem(empleado.get('cargo', ''))
-
-            item_turno = QTableWidgetItem(empleado.get('turno', ''))
-            item_turno.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-            item_rol = QTableWidgetItem(empleado.get('nombre_rol', ''))
-            item_rol.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-            for item in (item_codigo, item_dni, item_nombre, item_cargo, item_turno, item_rol):
+            # Proteger celdas contra escritura manual
+            for item in (item_cod, item_dni, item_nom, item_cargo, item_turno, item_rol, item_estado):
                 item.setFlags(item.flags() & ~Qt.ItemFlag.ItemIsEditable)
 
-            self.tbl_empleados.setItem(fila_idx, 0, item_codigo)
+            self.tbl_empleados.setItem(fila_idx, 0, item_cod)
             self.tbl_empleados.setItem(fila_idx, 1, item_dni)
-            self.tbl_empleados.setItem(fila_idx, 2, item_nombre)
+            self.tbl_empleados.setItem(fila_idx, 2, item_nom)
             self.tbl_empleados.setItem(fila_idx, 3, item_cargo)
             self.tbl_empleados.setItem(fila_idx, 4, item_turno)
             self.tbl_empleados.setItem(fila_idx, 5, item_rol)
+            self.tbl_empleados.setItem(fila_idx, 6, item_estado)
 
-        self.label_conteo.setText(f"Se muestran los últimos ({len(coleccion_empleados)}) registros (Top 20)")
+        self.label_conteo.setText(f"Se muestran los últimos ({len(lista)}) registros (Top 20)")
 
-    def _al_cambiar_seleccion_tabla(self):
-        hay_seleccion = len(self.tbl_empleados.selectedItems()) > 0
-        self.btn_editar.setEnabled(hay_seleccion)
-        self.btn_eliminar.setEnabled(hay_seleccion)
-
+    # ---------------------------------------------------------------
+    # Acción 2: Nuevo Empleado
+    # ---------------------------------------------------------------
     def _al_hacer_clic_nuevo(self):
-        """Abre el modal vacío para registrar un nuevo colaborador."""
-        modal_registro = EmpleadoFormDialog(parent=self)
-        if modal_registro.exec() == QDialog.DialogCode.Accepted:
+        modal = EmpleadoFormDialog(parent=self)
+        if modal.exec() == QDialog.DialogCode.Accepted:
+            self._cargar_grilla() # Si se guarda con éxito, recarga la tabla
+
+    # ---------------------------------------------------------------
+    # Acción 4: Editar (Principio DRY)
+    # ---------------------------------------------------------------
+    def _al_hacer_clic_editar(self):
+        fila = self.tbl_empleados.currentRow()
+        if fila < 0:
+            return
+
+        # Extraer el ID oculto de la grilla
+        id_oculto = self.tbl_empleados.item(fila, 0).data(99)
+
+        modal = EmpleadoFormDialog(parent=self, id_usuario_editar=id_oculto)
+        if modal.exec() == QDialog.DialogCode.Accepted:
             self._cargar_grilla()
 
-    def _al_hacer_clic_editar(self):
-        """Recupera el ID de la fila seleccionada y abre el modal en modo Edición."""
-        fila_actual = self.tbl_empleados.currentRow()
-        if fila_actual < 0:
-            QMessageBox.warning(self, "Selección Requerida", "Seleccione un empleado de la lista para editar.")
-            return
-
-        # Rescate del identificador primario almacenado en la memoria de la celda
-        celda_codigo = self.tbl_empleados.item(fila_actual, 0)
-        if celda_codigo is None:
-            QMessageBox.warning(self, "Selección Inválida", "No se encontró el empleado seleccionado.")
-            return
-
-        id_usuario = celda_codigo.data(99)
-
-        # Apertura modal inyectando el identificador
-        modal_edicion = EmpleadoFormDialog(parent=self, id_usuario_editar=id_usuario)
-        if modal_edicion.exec() == QDialog.DialogCode.Accepted:
-            self._cargar_grilla()  # Recarga reactiva de los datos actualizados
-
+    # ---------------------------------------------------------------
+    # Acción 5: Eliminar (UX defensiva)
+    # ---------------------------------------------------------------
     def _al_hacer_clic_eliminar(self):
-        pass
+        fila = self.tbl_empleados.currentRow()
+        if fila < 0:
+            return
+
+        id_oculto = self.tbl_empleados.item(fila, 0).data(99)
+        nombre_empleado = self.tbl_empleados.item(fila, 2).text()
+
+        # UX Defensiva: Confirmación explícita con botón por defecto en 'No'
+        respuesta = QMessageBox.question(
+            self,
+            "Confirmar Baja de Personal",
+            f"¿Está seguro de dar de baja (borrado lógico) al colaborador:\n\n{nombre_empleado}?",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if respuesta == QMessageBox.StandardButton.Yes:
+            try:
+                # Aplicamos el estándar corporativo: Borrado Lógico (logico=True)
+                self._controlador.eliminar_empleado(id_oculto, logico=True)
+                QMessageBox.information(self, "Baja Confirmada", "El colaborador ha sido desactivado del sistema.")
+                self._cargar_grilla()
+            except ValidacionDatosError as adv:
+                QMessageBox.warning(self, "Operación No Permitida", str(adv))
+            except BibliotecaException as err:
+                QMessageBox.critical(self, "Error de Integridad", str(err))

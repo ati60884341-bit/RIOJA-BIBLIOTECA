@@ -56,7 +56,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Sistema de Gesti\u00f3n de Biblioteca", None))
         self.action_programas.setText(QCoreApplication.translate("MainWindow", u"Programas de Estudio", None))
-        self.action_empleados.setText(QCoreApplication.translate("MainWindow", u"Colaboradores", None))
+        self.action_empleados.setText(QCoreApplication.translate("MainWindow", u"Empleados", None))
         self.action_roles.setText(QCoreApplication.translate("MainWindow", u"Roles", None))
         self.menuMantenimiento.setTitle(QCoreApplication.translate("MainWindow", u"&Mantenimiento", None))
     # retranslateUi

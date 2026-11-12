@@ -1,32 +1,28 @@
 from PySide6.QtWidgets import QMainWindow
-
-from views.frm_main_ui import Ui_MainWindow
+from views.ui.frm_main_ui import Ui_MainWindow
 from views.programa_list_view import ProgramaListView
 from views.empleado_list_view import EmpleadoListView
 from views.rol_list_view import RolListView
 
-
 class MainWindow(QMainWindow, Ui_MainWindow):
-    """Controlador visual de la Ventana Principal del sistema corporativo."""
+    """Contenedor principal de navegación corporativa del sistema."""
 
     def __init__(self):
         super().__init__()
-
-        # 1. Cargar diseño con barra de menú
         self.setupUi(self)
 
-        # 2. Variable para mantener viva la referencia de la subventana en memoria RAM
+        # Referencias en memoria RAM para evitar que el Garbage Collector cierre las ventanas
         self._ventana_programas = None
         self._ventana_empleados = None
         self._ventana_roles = None
 
-        # 3. Vincular acción del menú (QAction dispara la señal triggered)
+        # Conexión de acciones del menú Mantenimiento (QAction.triggered)
         self.action_programas.triggered.connect(self._abrir_modulo_programas)
         self.action_empleados.triggered.connect(self._abrir_modulo_empleados)
         self.action_roles.triggered.connect(self._abrir_modulo_roles)
 
     def _abrir_modulo_programas(self):
-        """Instancia y muestra la ventana del catálogo de Programas de Estudio."""
+        """Despliega o trae al frente el catálogo de Programas de Estudio."""
         if self._ventana_programas is None or not self._ventana_programas.isVisible():
             self._ventana_programas = ProgramaListView()
             self._ventana_programas.show()
@@ -35,7 +31,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self._ventana_programas.raise_()
 
     def _abrir_modulo_empleados(self):
-        """Instancia y muestra la ventana del catálogo de Colaboradores."""
+        """Despliega o trae al frente el catálogo de Empleados."""
         if self._ventana_empleados is None or not self._ventana_empleados.isVisible():
             self._ventana_empleados = EmpleadoListView()
             self._ventana_empleados.show()
@@ -44,7 +40,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self._ventana_empleados.raise_()
 
     def _abrir_modulo_roles(self):
-        """Instancia y muestra la ventana del catálogo de Roles."""
+        """Despliega o trae al frente el catálogo de Roles."""
         if self._ventana_roles is None or not self._ventana_roles.isVisible():
             self._ventana_roles = RolListView()
             self._ventana_roles.show()

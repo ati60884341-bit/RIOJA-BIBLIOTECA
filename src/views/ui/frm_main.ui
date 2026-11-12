@@ -41,7 +41,7 @@
   </action>
   <action name="action_empleados">
    <property name="text">
-    <string>Colaboradores</string>
+    <string>Empleados</string>
    </property>
   </action>
   <action name="action_roles">

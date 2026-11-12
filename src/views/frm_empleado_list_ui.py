@@ -1,13 +1,3 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'frm_empleado_list.ui'
-##
-## Created by: Qt User Interface Compiler version 6.12.0
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
-
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
@@ -72,8 +62,8 @@ class Ui_Form(object):
         self.verticalLayout.addLayout(self.layout_acciones)
 
         self.tbl_empleados = QTableWidget(Form)
-        if (self.tbl_empleados.columnCount() < 6):
-            self.tbl_empleados.setColumnCount(6)
+        if (self.tbl_empleados.columnCount() < 7):
+            self.tbl_empleados.setColumnCount(7)
         __qtablewidgetitem = QTableWidgetItem()
         self.tbl_empleados.setHorizontalHeaderItem(0, __qtablewidgetitem)
         __qtablewidgetitem1 = QTableWidgetItem()
@@ -86,6 +76,8 @@ class Ui_Form(object):
         self.tbl_empleados.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         __qtablewidgetitem5 = QTableWidgetItem()
         self.tbl_empleados.setHorizontalHeaderItem(5, __qtablewidgetitem5)
+        __qtablewidgetitem6 = QTableWidgetItem()
+        self.tbl_empleados.setHorizontalHeaderItem(6, __qtablewidgetitem6)
         self.tbl_empleados.setObjectName(u"tbl_empleados")
         self.tbl_empleados.setSelectionMode(QAbstractItemView.SingleSelection)
         self.tbl_empleados.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -123,6 +115,8 @@ class Ui_Form(object):
         ___qtablewidgetitem4.setText(QCoreApplication.translate("Form", u"Turno", None))
         ___qtablewidgetitem5 = self.tbl_empleados.horizontalHeaderItem(5)
         ___qtablewidgetitem5.setText(QCoreApplication.translate("Form", u"Rol", None))
+        ___qtablewidgetitem6 = self.tbl_empleados.horizontalHeaderItem(6)
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("Form", u"Estado", None))
         self.label_conteo.setText(QCoreApplication.translate("Form", u"Se muestra los \u00faltimos (Top 20)", None))
     # retranslateUi
 

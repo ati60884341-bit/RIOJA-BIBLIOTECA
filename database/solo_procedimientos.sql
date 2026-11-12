@@ -175,10 +175,13 @@ BEGIN
         u.nombres,
         u.apellidos,
         u.username,
+        CONCAT(u.apellidos, ', ', u.nombres) AS nombre_completo,
         e.codigo_empleado,
         e.cargo,
         e.turno,
-        r.nombre_rol
+        r.nombre_rol,
+        r.nombre_rol AS rol,
+        IF(u.es_activo = 1, 'Activo', 'Inactivo') AS estado
     FROM usuarios u
     INNER JOIN empleados e ON u.id_usuario = e.usuario_id
     INNER JOIN roles r     ON u.rol_id = r.id_rol
@@ -328,5 +331,31 @@ BEGIN
 
     COMMIT;
 END$$
+
+-- ---------- Empleados: Eliminación (S23 - Acción 5) ----------
+-- 1. BORRADO LÓGICO (Estándar Corporativo: desactiva el acceso conservando historial)
+DROP PROCEDURE IF EXISTS sp_empleado_eliminar_logico $$
+CREATE PROCEDURE sp_empleado_eliminar_logico(IN p_id_usuario INT)
+BEGIN
+    UPDATE usuarios 
+    SET es_activo = 0 
+    WHERE id_usuario = p_id_usuario;
+END $$
+
+-- 2. BORRADO FÍSICO (Destruye el registro; activa ON DELETE CASCADE hacia empleados,
+-- pero falla con error 1451 si existen llaves foráneas en tablas de movimiento)
+DROP PROCEDURE IF EXISTS sp_empleado_eliminar_fisico $$
+CREATE PROCEDURE sp_empleado_eliminar_fisico(IN p_id_usuario INT)
+sp_bloque: BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+    DELETE FROM usuarios WHERE id_usuario = p_id_usuario;
+    COMMIT;
+END sp_bloque $$
 
 DELIMITER ;
