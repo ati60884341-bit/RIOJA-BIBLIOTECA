@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Optional
 from database.conexion_bd import ConexionBD
 from models.entities.empleado import Empleado
-from exceptions.biblioteca_exceptions import BibliotecaException
+from exceptions.biblioteca_exceptions import BibliotecaException, IntegridadReferencialError
 
 class EmpleadoModel:
     """Capa DAO: Responsable exclusivo del acceso a datos para la entidad Empleado."""
@@ -125,11 +125,31 @@ class EmpleadoModel:
             return True
         except Exception as error:
             if "1451" in str(error) or "foreign key" in str(error).lower():
-                raise BibliotecaException(
+                raise IntegridadReferencialError(
                     "Integridad Referencial: No se puede eliminar físicamente porque el empleado "
                     "tiene operaciones históricas vinculadas. Utilice la baja lógica."
                 )
             raise BibliotecaException(f"Error al eliminar colaborador: {error}")
+        finally:
+            if cursor: cursor.close()
+            if conexion and conexion.is_connected(): conexion.close()
+
+    # S25 - Acción 2: Filtro multinivel para el Módulo de Reportes
+    @staticmethod
+    def filtrar_multinivel(rol_id: int, turno: str, solo_activos: int, criterio: str) -> list:
+        conexion = None
+        cursor = None
+        try:
+            conexion = ConexionBD.obtener_conexion()
+            cursor = conexion.cursor(dictionary=True)
+            # Pasamos los 4 parámetros exactos que pide el SP
+            parametros = (rol_id, turno, solo_activos, criterio)
+            cursor.callproc('sp_empleados_filtrar_multinivel', parametros)
+            for resultado in cursor.stored_results():
+                return resultado.fetchall()
+            return []
+        except Exception as error:
+            raise BibliotecaException(f"Error en filtro multinivel: {error}")
         finally:
             if cursor: cursor.close()
             if conexion and conexion.is_connected(): conexion.close()

@@ -1,7 +1,7 @@
 from typing import List
 from models.programa_model import ProgramaModel
 from models.entities.programa_estudio import ProgramaEstudio
-from exceptions.biblioteca_exceptions import BibliotecaException
+from exceptions.biblioteca_exceptions import BibliotecaException, ValidacionDatosError
 
 class ProgramaController:
     """Controlador que orquesta la lógica de negocio para Programas de Estudio."""
@@ -27,3 +27,9 @@ class ProgramaController:
             raise error
         except Exception as error_inesperado:
             raise BibliotecaException(f"Falla inesperada al buscar programas: {error_inesperado}")
+
+    def eliminar_programa(self, id_programa: int, logico: bool = True) -> bool:
+        """Valida el identificador y solicita la baja del programa al DAO."""
+        if id_programa is None or id_programa <= 0:
+            raise ValidacionDatosError("Identificador de programa no válido.")
+        return self._modelo_programa.eliminar(id_programa, logico)

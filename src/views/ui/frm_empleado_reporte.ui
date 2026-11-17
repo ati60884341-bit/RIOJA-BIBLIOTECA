@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>950</width>
+    <height>520</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Consulta de Personal</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="lbl_titulo">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Consulta y Reporte de Personal</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="grp_filtros">
+     <property name="title">
+      <string>Filtros</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="lbl_rol">
+        <property name="text">
+         <string>Rol:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cbo_rol">
+        <property name="minimumSize">
+         <size>
+          <width>170</width>
+          <height>0</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="lbl_turno">
+        <property name="text">
+         <string>Turno:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cbo_turno">
+        <item>
+         <property name="text">
+          <string>TODOS</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Mañana</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Tarde</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Noche</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="chk_activos">
+        <property name="text">
+         <string>Mostrar solo personal activo</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="txt_buscar">
+        <property name="placeholderText">
+         <string>Buscar por DNI o Apellidos...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="tbl_reporte">
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+     </property>
+     <column>
+      <property name="text">
+       <string>Código</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>DNI</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Apellidos y Nombres</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Cargo</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Turno</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Rol</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Estado</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

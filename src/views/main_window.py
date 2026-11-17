@@ -3,6 +3,7 @@ from views.frm_main_ui import Ui_MainWindow
 from views.programa_list_view import ProgramaListView
 from views.empleado_list_view import EmpleadoListView
 from views.rol_list_view import RolListView
+from views.empleado_reporte_view import EmpleadoReporteView
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     """Contenedor principal de navegación corporativa del sistema."""
@@ -23,6 +24,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.action_programas.triggered.connect(self._abrir_modulo_programas)
         self.action_empleados.triggered.connect(self._abrir_modulo_empleados)
         self.action_roles.triggered.connect(self._abrir_modulo_roles)
+
+        # S25 - Menú Reportes: Consulta de Personal
+        self._ventana_reporte_empleados = None
+        self.action_reporte_empleados.triggered.connect(self._abrir_reporte_empleados)
 
     def _abrir_modulo_programas(self):
         """Despliega o trae al frente el catálogo de Programas de Estudio."""
@@ -50,3 +55,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         else:
             self._ventana_roles.activateWindow()
             self._ventana_roles.raise_()
+
+    def _abrir_reporte_empleados(self):
+        """Despliega la ventana de Consultas y Reportes manteniendo instancia única."""
+        if self._ventana_reporte_empleados is None or not self._ventana_reporte_empleados.isVisible():
+            self._ventana_reporte_empleados = EmpleadoReporteView()
+            self._ventana_reporte_empleados.show()
+        else:
+            self._ventana_reporte_empleados.activateWindow()
+            self._ventana_reporte_empleados.raise_()

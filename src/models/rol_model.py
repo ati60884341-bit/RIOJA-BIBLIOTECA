@@ -127,6 +127,9 @@ class RolModel:
             conexion.commit()  # mysql-connector no confirma cambios automáticamente
             return True
         except Exception as error:
+            # Si el SP lanzó un SIGNAL (45000), mostramos solo su mensaje al usuario
+            if getattr(error, "sqlstate", None) == "45000":
+                raise BibliotecaException(error.msg)
             raise BibliotecaException(f"Error al eliminar el rol: {error}")
         finally:
             if cursor is not None:

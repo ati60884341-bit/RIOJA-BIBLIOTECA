@@ -109,6 +109,13 @@ class EmpleadoController:
             raise ValidacionDatosError("Operación denegada: No se puede eliminar al Administrador Principal del sistema.")
         return self._modelo_empleado.eliminar(id_usuario, logico)
 
+    # S25 - Acción 2: Filtro del reporte de personal
+    def filtrar_reporte(self, rol_id: int, turno: str, solo_activos: bool, criterio: str) -> list:
+        # Convertimos el booleano True/False del CheckBox a 1 o 0 para MySQL
+        activos_int = 1 if solo_activos else 0
+        texto_limpio = criterio.strip()
+        return self._modelo_empleado.filtrar_multinivel(rol_id, turno, activos_int, texto_limpio)
+
     def _sanitizar_campos(self, doc, nom, ape, user, cod, car):
         return (
             doc.strip(),

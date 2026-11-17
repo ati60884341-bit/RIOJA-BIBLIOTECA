@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt
 from views.frm_empleado_list_ui import Ui_Form
 from views.empleado_form_dialog import EmpleadoFormDialog
 from controllers.empleado_controller import EmpleadoController
-from exceptions.biblioteca_exceptions import BibliotecaException, ValidacionDatosError
+from exceptions.biblioteca_exceptions import BibliotecaException, ValidacionDatosError, IntegridadReferencialError
 
 
 class EmpleadoListView(QWidget, Ui_Form):
@@ -130,17 +130,27 @@ class EmpleadoListView(QWidget, Ui_Form):
         # UX Defensiva: Confirmación explícita con botón por defecto en 'No'
         respuesta = QMessageBox.question(
             self,
-            "Confirmar Baja de Personal",
-            f"¿Está seguro de dar de baja (borrado lógico) al colaborador:\n\n{nombre_empleado}?",
+            "Confirmar Eliminación de Personal",
+            f"¿Está seguro de eliminar definitivamente al colaborador:\n\n{nombre_empleado}?\n\n"
+            "Esta acción no se puede deshacer.",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
             QMessageBox.StandardButton.No
         )
 
         if respuesta == QMessageBox.StandardButton.Yes:
             try:
-                # Aplicamos el estándar corporativo: Borrado Lógico (logico=True)
-                self._controlador.eliminar_empleado(id_oculto, logico=True)
-                QMessageBox.information(self, "Baja Confirmada", "El colaborador ha sido desactivado del sistema.")
+                try:
+                    # Borrado físico: el registro desaparece de la base de datos
+                    self._controlador.eliminar_empleado(id_oculto, logico=False)
+                    QMessageBox.information(self, "Eliminación Confirmada", "El colaborador fue eliminado del sistema.")
+                except IntegridadReferencialError:
+                    # Tiene operaciones vinculadas (error 1451): se aplica la baja lógica
+                    self._controlador.eliminar_empleado(id_oculto, logico=True)
+                    QMessageBox.information(
+                        self, "Baja Lógica Aplicada",
+                        "El colaborador tiene operaciones históricas vinculadas y no puede borrarse.\n"
+                        "Se desactivó su acceso (Estado: Inactivo) conservando el historial."
+                    )
                 self._cargar_grilla()
             except ValidacionDatosError as adv:
                 QMessageBox.warning(self, "Operación No Permitida", str(adv))

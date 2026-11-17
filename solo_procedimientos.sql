@@ -380,4 +380,54 @@ sp_bloque: BEGIN
     COMMIT;
 END sp_bloque $$
 
+-- ---------- Programas de Estudio: Eliminación ----------
+-- 1. BORRADO LÓGICO (desactiva el programa conservando su historial)
+DROP PROCEDURE IF EXISTS sp_programa_eliminar_logico $$
+CREATE PROCEDURE sp_programa_eliminar_logico(IN p_id_programa INT)
+BEGIN
+    UPDATE programas_estudio
+    SET estado = 'Inactivo'
+    WHERE id_programa = p_id_programa;
+END $$
+
+-- 2. BORRADO FÍSICO (falla con error 1451 si hay libros o estudiantes vinculados)
+DROP PROCEDURE IF EXISTS sp_programa_eliminar_fisico $$
+CREATE PROCEDURE sp_programa_eliminar_fisico(IN p_id_programa INT)
+sp_bloque: BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+    DELETE FROM programas_estudio WHERE id_programa = p_id_programa;
+    COMMIT;
+END sp_bloque $$
+
+-- ---------- S25: Filtro multinivel de Empleados (Módulo de Reportes) ----------
+DROP PROCEDURE IF EXISTS sp_empleados_filtrar_multinivel $$
+CREATE PROCEDURE sp_empleados_filtrar_multinivel(
+    IN p_rol_id INT,           -- 0 para "Todos"
+    IN p_turno VARCHAR(20),    -- 'TODOS' para todos
+    IN p_solo_activos INT,     -- 1 para solo activos, 0 para todos
+    IN p_criterio VARCHAR(100) -- Búsqueda por texto (DNI o Apellidos)
+)
+BEGIN
+    SELECT
+        u.id_usuario, e.codigo_empleado, u.numero_documento,
+        CONCAT(u.apellidos, ' ', u.nombres) AS nombre_completo,
+        e.cargo, e.turno, r.nombre_rol AS rol,
+        IF(u.es_activo = 1, 'Activo', 'Inactivo') AS estado
+    FROM empleados e
+    INNER JOIN usuarios u ON e.usuario_id = u.id_usuario
+    INNER JOIN roles r ON u.rol_id = r.id_rol
+    WHERE (p_rol_id = 0 OR u.rol_id = p_rol_id)
+      AND (p_turno = 'TODOS' OR e.turno = p_turno)
+      AND (p_solo_activos = 0 OR u.es_activo = 1)
+      AND (p_criterio = '' OR u.numero_documento LIKE CONCAT('%', p_criterio, '%')
+           OR CONCAT(u.apellidos, ' ', u.nombres) LIKE CONCAT('%', p_criterio, '%'))
+    ORDER BY u.apellidos ASC;
+END $$
+
 DELIMITER ;

@@ -6,7 +6,7 @@ from PySide6.QtCore import Qt
 from views.frm_programa_list_ui import Ui_Form
 
 from controllers.programa_controller import ProgramaController
-from exceptions.biblioteca_exceptions import BibliotecaException
+from exceptions.biblioteca_exceptions import BibliotecaException, ValidacionDatosError, IntegridadReferencialError
 
 class ProgramaListView(QWidget, Ui_Form):
     """Controlador visual del catálogo de Programas de Estudio."""
@@ -141,5 +141,41 @@ class ProgramaListView(QWidget, Ui_Form):
             QMessageBox.information(self, "Desarrollo", f"Se editará el registro con ID BD: {id_oculto}")
 
     def _al_hacer_clic_eliminar(self):
-        """(Sesión 22) Recupera el ID y ejecuta la transacción de borrado."""
-        pass
+        """Recupera el ID oculto y ejecuta la baja lógica del programa con confirmación."""
+        fila = self.tbl_programas.currentRow()
+        if fila < 0:
+            QMessageBox.warning(self, "Selección Requerida", "Seleccione un programa de la lista para eliminar.")
+            return
+
+        id_oculto = self.tbl_programas.item(fila, 0).data(99)
+        nombre_programa = self.tbl_programas.item(fila, 2).text()
+
+        # UX Defensiva: Confirmación explícita con botón por defecto en 'No'
+        respuesta = QMessageBox.question(
+            self,
+            "Confirmar Eliminación de Programa",
+            f"¿Está seguro de eliminar definitivamente el programa:\n\n{nombre_programa}?\n\n"
+            "Esta acción no se puede deshacer.",
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            QMessageBox.StandardButton.No
+        )
+
+        if respuesta == QMessageBox.StandardButton.Yes:
+            try:
+                try:
+                    # Borrado físico: el registro desaparece de la base de datos
+                    self._controlador.eliminar_programa(id_oculto, logico=False)
+                    QMessageBox.information(self, "Eliminación Confirmada", "El programa de estudio fue eliminado.")
+                except IntegridadReferencialError:
+                    # Tiene libros o estudiantes vinculados (error 1451): se aplica la baja lógica
+                    self._controlador.eliminar_programa(id_oculto, logico=True)
+                    QMessageBox.information(
+                        self, "Baja Lógica Aplicada",
+                        "El programa tiene libros o estudiantes vinculados y no puede borrarse.\n"
+                        "Se marcó como Inactivo conservando el historial."
+                    )
+                self._cargar_grilla()
+            except ValidacionDatosError as adv:
+                QMessageBox.warning(self, "Operación No Permitida", str(adv))
+            except BibliotecaException as err:
+                QMessageBox.critical(self, "Error de Integridad", str(err))

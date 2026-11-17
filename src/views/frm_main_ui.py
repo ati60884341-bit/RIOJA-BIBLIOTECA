@@ -15,6 +15,8 @@ class Ui_MainWindow(object):
         self.action_empleados.setObjectName(u"action_empleados")
         self.action_roles = QAction(MainWindow)
         self.action_roles.setObjectName(u"action_roles")
+        self.action_reporte_empleados = QAction(MainWindow)
+        self.action_reporte_empleados.setObjectName(u"action_reporte_empleados")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
@@ -54,6 +56,8 @@ class Ui_MainWindow(object):
         self.menuArchivo.setObjectName(u"menuArchivo")
         self.menuMantenimiento = QMenu(self.menubar)
         self.menuMantenimiento.setObjectName(u"menuMantenimiento")
+        self.menuReportes = QMenu(self.menubar)
+        self.menuReportes.setObjectName(u"menuReportes")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -61,10 +65,12 @@ class Ui_MainWindow(object):
 
         self.menubar.addAction(self.menuArchivo.menuAction())
         self.menubar.addAction(self.menuMantenimiento.menuAction())
+        self.menubar.addAction(self.menuReportes.menuAction())
         self.menuArchivo.addAction(self.action_salir)
         self.menuMantenimiento.addAction(self.action_programas)
         self.menuMantenimiento.addAction(self.action_empleados)
         self.menuMantenimiento.addAction(self.action_roles)
+        self.menuReportes.addAction(self.action_reporte_empleados)
 
         self.retranslateUi(MainWindow)
 
@@ -76,8 +82,10 @@ class Ui_MainWindow(object):
         self.action_programas.setText(QCoreApplication.translate("MainWindow", u"Programas de Estudio", None))
         self.action_empleados.setText(QCoreApplication.translate("MainWindow", u"Empleados", None))
         self.action_roles.setText(QCoreApplication.translate("MainWindow", u"Roles del Sistema", None))
+        self.action_reporte_empleados.setText(QCoreApplication.translate("MainWindow", u"Consulta de Personal", None))
         self.lbl_titulo.setText(QCoreApplication.translate("MainWindow", u"SISTEMA DE GESTI\u00d3N INSTITUCIONAL", None))
         self.lbl_subtitulo.setText(QCoreApplication.translate("MainWindow", u"Seleccione una opci\u00f3n del men\u00fa superior para comenzar", None))
         self.menuArchivo.setTitle(QCoreApplication.translate("MainWindow", u"&Archivo", None))
         self.menuMantenimiento.setTitle(QCoreApplication.translate("MainWindow", u"&Mantenimiento", None))
+        self.menuReportes.setTitle(QCoreApplication.translate("MainWindow", u"&Reportes", None))
 

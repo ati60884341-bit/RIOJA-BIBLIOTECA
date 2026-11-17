@@ -1,7 +1,7 @@
 from typing import List
 from database.conexion_bd import ConexionBD
 from models.entities.programa_estudio import ProgramaEstudio
-from exceptions.biblioteca_exceptions import BibliotecaException
+from exceptions.biblioteca_exceptions import BibliotecaException, IntegridadReferencialError
 
 class ProgramaModel:
     """Capa DAO: Responsable exclusivo de la persistencia para Programas de Estudio."""
@@ -74,6 +74,33 @@ class ProgramaModel:
         except Exception as error_persistencia:
             raise BibliotecaException(f"Error en la capa DAO al buscar programas: {error_persistencia}")
 
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def eliminar(id_programa: int, logico: bool = True) -> bool:
+        """Ejecuta borrado lógico (estado='Inactivo') o físico controlando restricciones FK."""
+        conexion = None
+        cursor = None
+        try:
+            conexion = ConexionBD.obtener_conexion()
+            cursor = conexion.cursor()
+            if logico:
+                cursor.callproc('sp_programa_eliminar_logico', (id_programa,))
+            else:
+                cursor.callproc('sp_programa_eliminar_fisico', (id_programa,))
+            conexion.commit()  # mysql-connector no confirma cambios automáticamente
+            return True
+        except Exception as error:
+            if "1451" in str(error) or "foreign key" in str(error).lower():
+                raise IntegridadReferencialError(
+                    "Integridad Referencial: No se puede eliminar físicamente porque el programa "
+                    "tiene libros o estudiantes vinculados. Utilice la baja lógica."
+                )
+            raise BibliotecaException(f"Error al eliminar el programa: {error}")
         finally:
             if cursor is not None:
                 cursor.close()

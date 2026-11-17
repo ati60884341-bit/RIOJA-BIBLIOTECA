@@ -97,8 +97,15 @@
     <addaction name="action_empleados"/>
     <addaction name="action_roles"/>
    </widget>
+   <widget class="QMenu" name="menuReportes">
+    <property name="title">
+     <string>&amp;Reportes</string>
+    </property>
+    <addaction name="action_reporte_empleados"/>
+   </widget>
    <addaction name="menuArchivo"/>
    <addaction name="menuMantenimiento"/>
+   <addaction name="menuReportes"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_salir">
@@ -119,6 +126,11 @@
   <action name="action_roles">
    <property name="text">
     <string>Roles del Sistema</string>
+   </property>
+  </action>
+  <action name="action_reporte_empleados">
+   <property name="text">
+    <string>Consulta de Personal</string>
    </property>
   </action>
  </widget>
