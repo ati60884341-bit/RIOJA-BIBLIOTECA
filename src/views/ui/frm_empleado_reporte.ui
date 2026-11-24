@@ -95,6 +95,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="btn_limpiar">
+        <property name="text">
+         <string>Limpiar Filtros</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -141,6 +148,32 @@
        <string>Estado</string>
       </property>
      </column>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="lbl_contador">
+     <property name="text">
+      <string>Mostrando 0 registros</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="grp_detalle">
+     <property name="title">
+      <string>Ficha Rápida del Colaborador Seleccionado</string>
+     </property>
+     <layout class="QVBoxLayout" name="layout_detalle">
+      <item>
+       <widget class="QLabel" name="lbl_detalle_empleado">
+        <property name="text">
+         <string>Seleccione un registro de la tabla para ver su cuenta de acceso y detalles...</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

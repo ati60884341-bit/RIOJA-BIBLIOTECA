@@ -1,6 +1,24 @@
-from PySide6.QtCore import QCoreApplication, QMetaObject, QSize
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QAbstractItemView, QCheckBox, QComboBox, QGroupBox, QHBoxLayout, QLabel, QLineEdit, QTableWidget, QTableWidgetItem, QVBoxLayout
+# -*- coding: utf-8 -*-
+
+################################################################################
+## Form generated from reading UI file 'frm_empleado_reporte.ui'
+##
+## Created by: Qt User Interface Compiler version 6.12.0
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
+
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComboBox,
+    QGroupBox, QHBoxLayout, QHeaderView, QLabel,
+    QLineEdit, QPushButton, QSizePolicy, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -57,6 +75,11 @@ class Ui_Form(object):
 
         self.horizontalLayout.addWidget(self.txt_buscar)
 
+        self.btn_limpiar = QPushButton(self.grp_filtros)
+        self.btn_limpiar.setObjectName(u"btn_limpiar")
+
+        self.horizontalLayout.addWidget(self.btn_limpiar)
+
 
         self.verticalLayout.addWidget(self.grp_filtros)
 
@@ -83,10 +106,29 @@ class Ui_Form(object):
 
         self.verticalLayout.addWidget(self.tbl_reporte)
 
+        self.lbl_contador = QLabel(Form)
+        self.lbl_contador.setObjectName(u"lbl_contador")
+
+        self.verticalLayout.addWidget(self.lbl_contador)
+
+        self.grp_detalle = QGroupBox(Form)
+        self.grp_detalle.setObjectName(u"grp_detalle")
+        self.layout_detalle = QVBoxLayout(self.grp_detalle)
+        self.layout_detalle.setObjectName(u"layout_detalle")
+        self.lbl_detalle_empleado = QLabel(self.grp_detalle)
+        self.lbl_detalle_empleado.setObjectName(u"lbl_detalle_empleado")
+        self.lbl_detalle_empleado.setWordWrap(True)
+
+        self.layout_detalle.addWidget(self.lbl_detalle_empleado)
+
+
+        self.verticalLayout.addWidget(self.grp_detalle)
+
 
         self.retranslateUi(Form)
 
         QMetaObject.connectSlotsByName(Form)
+    # setupUi
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Consulta de Personal", None))
@@ -101,6 +143,7 @@ class Ui_Form(object):
 
         self.chk_activos.setText(QCoreApplication.translate("Form", u"Mostrar solo personal activo", None))
         self.txt_buscar.setPlaceholderText(QCoreApplication.translate("Form", u"Buscar por DNI o Apellidos...", None))
+        self.btn_limpiar.setText(QCoreApplication.translate("Form", u"Limpiar Filtros", None))
         ___qtablewidgetitem = self.tbl_reporte.horizontalHeaderItem(0)
         ___qtablewidgetitem.setText(QCoreApplication.translate("Form", u"C\u00f3digo", None))
         ___qtablewidgetitem1 = self.tbl_reporte.horizontalHeaderItem(1)
@@ -115,4 +158,8 @@ class Ui_Form(object):
         ___qtablewidgetitem5.setText(QCoreApplication.translate("Form", u"Rol", None))
         ___qtablewidgetitem6 = self.tbl_reporte.horizontalHeaderItem(6)
         ___qtablewidgetitem6.setText(QCoreApplication.translate("Form", u"Estado", None))
+        self.lbl_contador.setText(QCoreApplication.translate("Form", u"Mostrando 0 registros", None))
+        self.grp_detalle.setTitle(QCoreApplication.translate("Form", u"Ficha R\u00e1pida del Colaborador Seleccionado", None))
+        self.lbl_detalle_empleado.setText(QCoreApplication.translate("Form", u"Seleccione un registro de la tabla para ver su cuenta de acceso y detalles...", None))
+    # retranslateUi
 
