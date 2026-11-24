@@ -134,7 +134,7 @@ class EmpleadoModel:
             if cursor: cursor.close()
             if conexion and conexion.is_connected(): conexion.close()
 
-    # S25 - Acción 2: Filtro multinivel para el Módulo de Reportes
+    # S25 Filtro multinivel para el Módulo de Reportes
     @staticmethod
     def filtrar_multinivel(rol_id: int, turno: str, solo_activos: int, criterio: str) -> list:
         conexion = None
