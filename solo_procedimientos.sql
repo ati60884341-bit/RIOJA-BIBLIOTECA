@@ -160,6 +160,54 @@ BEGIN
     ORDER BY id_programa DESC;
 END$$
 
+DROP PROCEDURE IF EXISTS sp_programas_obtener_por_id$$
+CREATE PROCEDURE sp_programas_obtener_por_id(
+    IN p_id_programa INT
+)
+BEGIN
+    SELECT id_programa, codigo_programa, nombre_programa, estado, creado_en
+    FROM programas_estudio
+    WHERE id_programa = p_id_programa;
+END$$
+
+DROP PROCEDURE IF EXISTS sp_programas_registrar$$
+CREATE PROCEDURE sp_programas_registrar(
+    IN p_codigo VARCHAR(10),
+    IN p_nombre VARCHAR(120)
+)
+BEGIN
+    IF EXISTS (SELECT 1 FROM programas_estudio WHERE UPPER(codigo_programa) = UPPER(TRIM(p_codigo))) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El código del programa de estudio ya está registrado.';
+    END IF;
+
+    INSERT INTO programas_estudio (codigo_programa, nombre_programa, estado)
+    VALUES (UPPER(TRIM(p_codigo)), UPPER(TRIM(p_nombre)), 'Activo');
+END$$
+
+DROP PROCEDURE IF EXISTS sp_programas_actualizar$$
+CREATE PROCEDURE sp_programas_actualizar(
+    IN p_id_programa INT,
+    IN p_codigo VARCHAR(10),
+    IN p_nombre VARCHAR(120),
+    IN p_estado VARCHAR(10)
+)
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM programas_estudio
+        WHERE UPPER(codigo_programa) = UPPER(TRIM(p_codigo)) AND id_programa <> p_id_programa
+    ) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'El código ya pertenece a otro programa de estudio.';
+    END IF;
+
+    UPDATE programas_estudio
+    SET codigo_programa = UPPER(TRIM(p_codigo)),
+        nombre_programa = UPPER(TRIM(p_nombre)),
+        estado = p_estado
+    WHERE id_programa = p_id_programa;
+END$$
+
 -- ---------- Empleados ----------
 DROP PROCEDURE IF EXISTS sp_empleados_listar$$
 CREATE PROCEDURE sp_empleados_listar(

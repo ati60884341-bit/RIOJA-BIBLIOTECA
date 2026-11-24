@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from database.conexion_bd import ConexionBD
 from models.entities.programa_estudio import ProgramaEstudio
 from exceptions.biblioteca_exceptions import BibliotecaException, IntegridadReferencialError
@@ -73,6 +73,88 @@ class ProgramaModel:
 
         except Exception as error_persistencia:
             raise BibliotecaException(f"Error en la capa DAO al buscar programas: {error_persistencia}")
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def obtener_por_id(id_programa: int) -> Optional[ProgramaEstudio]:
+        """Ejecuta 'sp_programas_obtener_por_id' y retorna el programa o None."""
+        conexion = None
+        cursor = None
+        try:
+            conexion = ConexionBD.obtener_conexion()
+            cursor = conexion.cursor(dictionary=True)
+            cursor.callproc('sp_programas_obtener_por_id', (id_programa,))
+
+            for resultado in cursor.stored_results():
+                fila = resultado.fetchone()
+                if fila:
+                    return ProgramaEstudio(
+                        id_programa=fila['id_programa'],
+                        codigo_programa=fila['codigo_programa'],
+                        nombre_programa=fila['nombre_programa'],
+                        estado=fila['estado'],
+                        creado_en=fila['creado_en']
+                    )
+            return None
+
+        except Exception as error:
+            raise BibliotecaException(f"Error al consultar el programa por ID: {error}")
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def registrar(programa: ProgramaEstudio) -> bool:
+        """Ejecuta 'sp_programas_registrar' para insertar un nuevo programa."""
+        conexion = None
+        cursor = None
+        try:
+            conexion = ConexionBD.obtener_conexion()
+            cursor = conexion.cursor()
+            cursor.callproc('sp_programas_registrar', (programa.codigo_programa, programa.nombre_programa))
+            conexion.commit()
+            return True
+
+        except Exception as error:
+            if conexion is not None and conexion.is_connected():
+                conexion.rollback()
+            raise BibliotecaException(f"Error al registrar el programa: {error}")
+
+        finally:
+            if cursor is not None:
+                cursor.close()
+            if conexion is not None and conexion.is_connected():
+                conexion.close()
+
+    @staticmethod
+    def actualizar(programa: ProgramaEstudio) -> bool:
+        """Ejecuta 'sp_programas_actualizar' para modificar un programa existente."""
+        conexion = None
+        cursor = None
+        try:
+            conexion = ConexionBD.obtener_conexion()
+            cursor = conexion.cursor()
+            cursor.callproc('sp_programas_actualizar', (
+                programa.id_programa,
+                programa.codigo_programa,
+                programa.nombre_programa,
+                programa.estado
+            ))
+            conexion.commit()
+            return True
+
+        except Exception as error:
+            if conexion is not None and conexion.is_connected():
+                conexion.rollback()
+            raise BibliotecaException(f"Error al actualizar el programa: {error}")
 
         finally:
             if cursor is not None:

@@ -1,9 +1,10 @@
 import os
-from PySide6.QtWidgets import QWidget, QTableWidgetItem, QMessageBox, QHeaderView
+from PySide6.QtWidgets import QWidget, QTableWidgetItem, QMessageBox, QHeaderView, QDialog
 from PySide6.QtCore import Qt
 
 # 1. Importamos la clase visual generada por pyside6-uic
 from views.frm_programa_list_ui import Ui_Form
+from views.programa_form_dialog import ProgramaFormDialog
 
 from controllers.programa_controller import ProgramaController
 from exceptions.biblioteca_exceptions import BibliotecaException, ValidacionDatosError, IntegridadReferencialError
@@ -129,16 +130,20 @@ class ProgramaListView(QWidget, Ui_Form):
         self.btn_eliminar.setEnabled(hay_seleccion)
 
     def _al_hacer_clic_nuevo(self):
-        """(Sesión 21) Abrirá el modal vacío para crear un registro."""
-        QMessageBox.information(self, "Desarrollo", "Formulario de Registro (Próxima Sesión)")
+        """Abre el modal vacío para registrar un nuevo programa."""
+        if ProgramaFormDialog(self).exec() == QDialog.DialogCode.Accepted:
+            self._cargar_grilla()
 
     def _al_hacer_clic_editar(self):
-        """(Sesión 22) Recupera el ID oculto y abre el modal para editar."""
+        """Recupera el ID oculto y abre el modal en modo edición."""
         fila_actual = self.tbl_programas.currentRow()
-        if fila_actual >= 0:
-            # Rescatamos el ID que escondimos en la columna 0 (Código)
-            id_oculto = self.tbl_programas.item(fila_actual, 0).data(99)
-            QMessageBox.information(self, "Desarrollo", f"Se editará el registro con ID BD: {id_oculto}")
+        if fila_actual < 0:
+            QMessageBox.warning(self, "Selección Requerida", "Seleccione un programa de la lista para editar.")
+            return
+        # Rescatamos el ID que escondimos en la columna 0 (Código)
+        id_oculto = self.tbl_programas.item(fila_actual, 0).data(99)
+        if ProgramaFormDialog(self, id_oculto).exec() == QDialog.DialogCode.Accepted:
+            self._cargar_grilla()
 
     def _al_hacer_clic_eliminar(self):
         """Recupera el ID oculto y ejecuta la baja lógica del programa con confirmación."""
