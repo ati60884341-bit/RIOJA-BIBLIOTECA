@@ -464,7 +464,7 @@ CREATE PROCEDURE sp_empleados_filtrar_multinivel(
 BEGIN
     SELECT
         u.id_usuario, e.codigo_empleado, u.numero_documento,
-        CONCAT(u.apellidos, ' ', u.nombres) AS nombre_completo,
+        CONCAT(UPPER(u.apellidos), ', ', UPPER(u.nombres)) AS nombre_completo,
         e.cargo, e.turno, r.nombre_rol AS rol,
         IF(u.es_activo = 1, 'Activo', 'Inactivo') AS estado
     FROM empleados e
